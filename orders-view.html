@@ -16,6 +16,22 @@
     </div>
 </nav>
 
+    <button onclick="resetOrders()">
+    Clear All Orders
+</button>
+
+<script>
+function resetOrders(){
+
+    localStorage.removeItem("orders");
+
+    alert("Orders cleared");
+
+    location.reload();
+
+}
+</script>
+
 <div
 class="admin-container"
 id="ordersList">
