@@ -54,7 +54,12 @@ function resetOrders(){
 }
 
 function displayOrders(){
-
+    container.innerHTML += `
+<div class="order-card">
+    <h2>${order.name}</h2>
+    <p>Quantity: ${order.quantity}</p>
+</div>
+`;
     const container =
     document.getElementById("ordersList");
 
