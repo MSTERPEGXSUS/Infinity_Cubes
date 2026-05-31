@@ -5,61 +5,62 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<button onclick="resetOrders()">
-    Clear All Orders
-</button>
 
-<div id="ordersList" class="admin-container"></div>
+<div id="loginBox" class="admin-container">
 
-<script src="script.js"></script>
+    <h1>Orders Panel</h1>
 
-<script>
-function resetOrders(){
+    <input
+    type="password"
+    id="password"
+    placeholder="Enter Password">
 
-    localStorage.removeItem("orders");
+    <br><br>
 
-    alert("Orders cleared");
+    <button onclick="checkPassword()">
+        Access Orders
+    </button>
 
-    location.reload();
-
-}
-</script>
-<nav>
-    <div class="logo">∞ Infinity Cubes</div>
-
-    <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="shop.html">Shop</a>
-        <a href="orders-view.html">Orders</a>
-    </div>
-</nav>
-
-    <button onclick="resetOrders()">
-    Clear All Orders
-</button>
-
-<script>
-function resetOrders(){
-
-    localStorage.removeItem("orders");
-
-    alert("Orders cleared");
-
-    location.reload();
-
-}
-</script>
+</div>
 
 <div
-class="admin-container"
-id="ordersList">
+id="ordersArea"
+style="display:none;">
+
+    <div
+    class="admin-container"
+    id="ordersList">
+    </div>
 
 </div>
 
 <script src="script.js"></script>
 
 <script>
-displayOrders();
+
+function checkPassword(){
+
+    const pass =
+    document.getElementById("password").value;
+
+    if(pass === "cubeadmin"){
+
+        document.getElementById("loginBox").style.display = "none";
+
+        document.getElementById("ordersArea").style.display = "block";
+
+        displayOrders();
+
+    }
+
+    else{
+
+        alert("Incorrect password");
+
+    }
+
+}
+
 </script>
 
 </body>
