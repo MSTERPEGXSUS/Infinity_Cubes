@@ -41,6 +41,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+function resetOrders(){
+
+    if(confirm("Delete all orders?")){
+
+        localStorage.removeItem("orders");
+
+        location.reload();
+
+    }
+
+}
+
 function displayOrders(){
 
     const container =
