@@ -1,120 +1,67 @@
-document.addEventListener("DOMContentLoaded", () => {
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Orders</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-    const form =
-    document.getElementById("orderForm");
+<div id="loginBox" class="admin-container">
 
-    if(form){
+    <h1>Orders Panel</h1>
 
-        form.addEventListener("submit", (e) => {
+    <input
+    type="password"
+    id="password"
+    placeholder="Enter Password">
 
-            e.preventDefault();
+    <br><br>
 
-            const order = {
+    <button onclick="checkPassword()">
+        Access Orders
+    </button>
 
-                name:
-                document.getElementById("name").value,
-                colour: document.getElementById("colour").value,
-                quantity:
-                document.getElementById("quantity").value
+</div>
 
-            };
+<div
+id="ordersArea"
+style="display:none;">
 
-            let orders =
-            JSON.parse(
-                localStorage.getItem("orders")
-            ) || [];
+    <div
+    class="admin-container"
+    id="ordersList">
+    </div>
 
-            orders.push(order);
+</div>
 
-            localStorage.setItem(
-                "orders",
-                JSON.stringify(orders)
-            );
+<script src="script.js"></script>
 
-            alert("Order Saved");
+<script>
 
-            form.reset();
+function checkPassword(){
 
-        });
+    const pass =
+    document.getElementById("password").value;
+
+    if(pass === "cubeadmin"){
+
+        document.getElementById("loginBox").style.display = "none";
+
+        document.getElementById("ordersArea").style.display = "block";
+
+        displayOrders();
 
     }
 
-});
+    else{
 
-function resetOrders(){
-
-    if(confirm("Delete all orders?")){
-
-        localStorage.removeItem("orders");
-
-        location.reload();
+        alert("Incorrect password");
 
     }
 
 }
 
-function displayOrders(){
-    container.innerHTML += `
-<div class="order-card">
-    <h2>${order.name}</h2>
-    <p>Quantity: ${order.quantity}</p>
-</div>
-`;
-    container.innerHTML += `
-<div class="order-card">
+</script>
 
-    <h2>${order.name}</h2>
-
-    <p>
-        <strong>Colour:</strong>
-        ${order.colour}
-    </p>
-
-    <p>
-        <strong>Quantity:</strong>
-        ${order.quantity}
-    </p>
-
-</div>
-`;
-    const container =
-    document.getElementById("ordersList");
-
-    if(!container) return;
-
-    const orders =
-    JSON.parse(
-        localStorage.getItem("orders")
-    ) || [];
-
-    if(orders.length === 0){
-
-        container.innerHTML =
-        "<h2>No Orders Yet</h2>";
-
-        return;
-
-    }
-
-    container.innerHTML = "";
-
-    orders.forEach(order => {
-
-        container.innerHTML += `
-
-        <div class="order-card">
-
-            <h2>${order.name}</h2>
-
-            <p>
-                Quantity:
-                ${order.quantity}
-            </p>
-
-        </div>
-
-        `;
-
-    });
-
-}
+</body>
+</html>
