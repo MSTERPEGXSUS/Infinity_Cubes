@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 name:
                 document.getElementById("name").value,
-
+                colour: document.getElementById("colour").value,
                 quantity:
                 document.getElementById("quantity").value
 
