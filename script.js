@@ -60,6 +60,23 @@ function displayOrders(){
     <p>Quantity: ${order.quantity}</p>
 </div>
 `;
+    container.innerHTML += `
+<div class="order-card">
+
+    <h2>${order.name}</h2>
+
+    <p>
+        <strong>Colour:</strong>
+        ${order.colour}
+    </p>
+
+    <p>
+        <strong>Quantity:</strong>
+        ${order.quantity}
+    </p>
+
+</div>
+`;
     const container =
     document.getElementById("ordersList");
 
