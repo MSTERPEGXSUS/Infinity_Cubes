@@ -5,7 +5,25 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<button onclick="resetOrders()">
+    Clear All Orders
+</button>
 
+<div id="ordersList" class="admin-container"></div>
+
+<script src="script.js"></script>
+
+<script>
+function resetOrders(){
+
+    localStorage.removeItem("orders");
+
+    alert("Orders cleared");
+
+    location.reload();
+
+}
+</script>
 <nav>
     <div class="logo">∞ Infinity Cubes</div>
 
