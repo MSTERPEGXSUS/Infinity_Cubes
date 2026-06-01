@@ -90,32 +90,39 @@ function showOrders(){
         return;
     }
 
-    orders.forEach(order => {
+#let totalRevenue = 0;
 
-        box.innerHTML += `
+orders.forEach(order => {
 
-        <div class="order-card">
+    totalRevenue += Number(order.quantity);
 
-            <h2>${order.name}</h2>
+    box.innerHTML += `
 
-            <p>
-                <strong>Colour:</strong>
-                ${order.colour}
-            </p>
+    <div class="order-card">
 
-            <p>
-                <strong>Quantity:</strong>
-                ${order.quantity}
-            </p>
+        <h2>${order.name}</h2>
 
-            <p>
-                <strong>Total:</strong>
-                £${Number(order.quantity).toFixed(2)}
-            </p>
+        <p><strong>Colour:</strong> ${order.colour}</p>
 
-        </div>
+        <p><strong>Quantity:</strong> ${order.quantity}</p>
 
-        `;
+        <p><strong>Price:</strong> £${Number(order.quantity).toFixed(2)}</p>
+
+    </div>
+
+    `;
+
+});
+
+box.innerHTML += `
+
+<div class="cart-total">
+
+    Total Revenue: £${totalRevenue.toFixed(2)}
+
+</div>
+
+`;
 
     });
 
