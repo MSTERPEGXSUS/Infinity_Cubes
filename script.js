@@ -79,16 +79,42 @@ function showOrders(){
 
     box.innerHTML = "";
 
+    if(orders.length === 0){
+
+        box.innerHTML = `
+            <div class="order-card">
+                <h2>No Orders Yet</h2>
+            </div>
+        `;
+
+        return;
+    }
+
     orders.forEach(order => {
 
         box.innerHTML += `
+
+        <div class="order-card">
+
+            <h2>${order.name}</h2>
+
             <p>
-            ${order.name}
-            |
-            ${order.colour}
-            |
-            ${order.quantity}
+                <strong>Colour:</strong>
+                ${order.colour}
             </p>
+
+            <p>
+                <strong>Quantity:</strong>
+                ${order.quantity}
+            </p>
+
+            <p>
+                <strong>Total:</strong>
+                £${Number(order.quantity).toFixed(2)}
+            </p>
+
+        </div>
+
         `;
 
     });
