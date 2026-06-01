@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
             e.preventDefault();
 
-            alert("BUTTON WORKS");
+        
 
             const order = {
 
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 JSON.stringify(orders)
             );
 
-            alert("Order Saved");
+            alert("Order placed successfully!");
 
         });
 
