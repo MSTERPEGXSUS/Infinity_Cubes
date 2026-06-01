@@ -1,17 +1,17 @@
-console.log("SCRIPT LOADED");
+// ======================
+// ORDER FORM
+// ======================
 
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded", () => {
 
     const form =
     document.getElementById("orderForm");
 
     if(form){
 
-        form.addEventListener("submit", function(e){
+        form.addEventListener("submit", (e) => {
 
             e.preventDefault();
-
-        
 
             const order = {
 
@@ -22,12 +22,21 @@ document.addEventListener("DOMContentLoaded", function(){
                 document.getElementById("colour").value,
 
                 quantity:
-                document.getElementById("quantity").value
+                Number(
+                    document.getElementById("quantity").value
+                ),
+
+                price:
+                Number(
+                    document.getElementById("quantity").value
+                )
 
             };
 
             let orders =
-            JSON.parse(localStorage.getItem("orders")) || [];
+            JSON.parse(
+                localStorage.getItem("orders")
+            ) || [];
 
             orders.push(order);
 
@@ -38,11 +47,17 @@ document.addEventListener("DOMContentLoaded", function(){
 
             alert("Order placed successfully!");
 
+            form.reset();
+
         });
 
     }
 
 });
+
+// ======================
+// LOGIN
+// ======================
 
 function checkPassword(){
 
@@ -51,11 +66,13 @@ function checkPassword(){
 
     if(pass === "cubeadmin"){
 
-        document.getElementById("loginBox").style.display =
-        "none";
+        document.getElementById(
+            "loginBox"
+        ).style.display = "none";
 
-        document.getElementById("ordersArea").style.display =
-        "block";
+        document.getElementById(
+            "ordersArea"
+        ).style.display = "block";
 
         showOrders();
 
@@ -63,11 +80,15 @@ function checkPassword(){
 
     else{
 
-        alert("Wrong Password");
+        alert("Incorrect password");
 
     }
 
 }
+
+// ======================
+// SHOW ORDERS
+// ======================
 
 function showOrders(){
 
@@ -75,7 +96,9 @@ function showOrders(){
     document.getElementById("ordersList");
 
     let orders =
-    JSON.parse(localStorage.getItem("orders")) || [];
+    JSON.parse(
+        localStorage.getItem("orders")
+    ) || [];
 
     box.innerHTML = "";
 
@@ -88,42 +111,90 @@ function showOrders(){
         `;
 
         return;
+
     }
 
-#let totalRevenue = 0;
+    let totalRevenue = 0;
 
-orders.forEach(order => {
+    orders.forEach(order => {
 
-    totalRevenue += Number(order.quantity);
+        const price = Number(order.price);
+
+        totalRevenue += price;
+
+        box.innerHTML += `
+
+        <div class="order-card">
+
+            <div class="order-header">
+
+                <h2>${order.name}</h2>
+
+                <span class="status">
+                    New Order
+                </span>
+
+            </div>
+
+            <p>
+                🎨 Colour:
+                ${order.colour}
+            </p>
+
+            <p>
+                📦 Quantity:
+                ${order.quantity}
+            </p>
+
+            <p>
+                💷 Price:
+                £${price.toFixed(2)}
+            </p>
+
+        </div>
+
+        `;
+
+    });
 
     box.innerHTML += `
 
-    <div class="order-card">
+    <div class="cart-total">
 
-        <h2>${order.name}</h2>
+        Total Revenue
 
-        <p><strong>Colour:</strong> ${order.colour}</p>
+        <br><br>
 
-        <p><strong>Quantity:</strong> ${order.quantity}</p>
+        £${totalRevenue.toFixed(2)}
 
-        <p><strong>Price:</strong> £${Number(order.quantity).toFixed(2)}</p>
+        <br><br>
+
+        <button onclick="clearOrders()">
+            Clear Orders
+        </button>
 
     </div>
 
     `;
 
-});
+}
 
-box.innerHTML += `
+// ======================
+// CLEAR ORDERS
+// ======================
 
-<div class="cart-total">
+function clearOrders(){
 
-    Total Revenue: £${totalRevenue.toFixed(2)}
+    if(confirm(
+        "Delete all orders?"
+    )){
 
-</div>
+        localStorage.removeItem(
+            "orders"
+        );
 
-`;
+        showOrders();
 
-    });
+    }
 
 }
