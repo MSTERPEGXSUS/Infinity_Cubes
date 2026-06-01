@@ -5,25 +5,34 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="admin-container">
 
-<div id="loginBox">
+    <div id="loginBox">
 
-    <input
-    type="password"
-    id="password"
-    placeholder="Password">
+        <h1>Orders Panel</h1>
 
-    <button onclick="checkPassword()">
-        Access Orders
-    </button>
+        <br>
 
-</div>
+        <input
+        type="password"
+        id="password"
+        placeholder="Enter Password">
 
-<div
-id="ordersArea"
-style="display:none;">
+        <br><br>
 
-    <div id="ordersList"></div>
+        <button onclick="checkPassword()">
+            Access Orders
+        </button>
+
+    </div>
+
+    <div
+    id="ordersArea"
+    style="display:none;">
+
+        <div id="ordersList"></div>
+
+    </div>
 
 </div>
 
