@@ -1,30 +1,28 @@
-// ======================
-// SAVE ORDER
-// ======================
+console.log("SCRIPT LOADED");
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function(){
 
-    const orderForm = document.getElementById("orderForm");
+    const form =
+    document.getElementById("orderForm");
 
-    if(orderForm){
+    if(form){
 
-        orderForm.addEventListener("submit", (e) => {
+        form.addEventListener("submit", function(e){
 
             e.preventDefault();
 
+            alert("BUTTON WORKS");
+
             const order = {
 
-                name: document.getElementById("name").value,
+                name:
+                document.getElementById("name").value,
 
-                colour: document.getElementById("colour").value,
+                colour:
+                document.getElementById("colour").value,
 
-                quantity: Number(
-                    document.getElementById("quantity").value
-                ),
-
-                price: Number(
-                    document.getElementById("quantity").value
-                ) * 1
+                quantity:
+                document.getElementById("quantity").value
 
             };
 
@@ -38,9 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 JSON.stringify(orders)
             );
 
-            alert("Order Saved!");
-
-            orderForm.reset();
+            alert("Order Saved");
 
         });
 
@@ -48,16 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-// ======================
-// PASSWORD CHECK
-// ======================
-
 function checkPassword(){
 
-    const password =
+    const pass =
     document.getElementById("password").value;
 
-    if(password === "cubeadmin"){
+    if(pass === "cubeadmin"){
 
         document.getElementById("loginBox").style.display =
         "none";
@@ -65,107 +57,40 @@ function checkPassword(){
         document.getElementById("ordersArea").style.display =
         "block";
 
-        displayOrders();
+        showOrders();
 
     }
 
     else{
 
-        alert("Incorrect Password");
+        alert("Wrong Password");
 
     }
 
 }
 
-// ======================
-// DISPLAY ORDERS
-// ======================
+function showOrders(){
 
-function displayOrders(){
-
-    const container =
+    const box =
     document.getElementById("ordersList");
-
-    if(!container) return;
 
     let orders =
     JSON.parse(localStorage.getItem("orders")) || [];
 
-    container.innerHTML = "";
-
-    let total = 0;
-
-    if(orders.length === 0){
-
-        container.innerHTML =
-        "<h2>No Orders Yet</h2>";
-
-        return;
-
-    }
+    box.innerHTML = "";
 
     orders.forEach(order => {
 
-        total += order.price;
-
-        container.innerHTML += `
-
-        <div class="order-card">
-
-            <h2>${order.name}</h2>
-
+        box.innerHTML += `
             <p>
-                <strong>Colour:</strong>
-                ${order.colour}
+            ${order.name}
+            |
+            ${order.colour}
+            |
+            ${order.quantity}
             </p>
-
-            <p>
-                <strong>Quantity:</strong>
-                ${order.quantity}
-            </p>
-
-            <p>
-                <strong>Price:</strong>
-                £${order.price.toFixed(2)}
-            </p>
-
-        </div>
-
         `;
 
     });
-
-    container.innerHTML += `
-
-    <div class="cart-total">
-
-        Total Revenue:
-        £${total.toFixed(2)}
-
-        <br><br>
-
-        <button onclick="clearOrders()">
-            Clear All Orders
-        </button>
-
-    </div>
-
-    `;
-
-}
-
-// ======================
-// CLEAR ORDERS
-// ======================
-
-function clearOrders(){
-
-    if(confirm("Delete all orders?")){
-
-        localStorage.removeItem("orders");
-
-        location.reload();
-
-    }
 
 }
