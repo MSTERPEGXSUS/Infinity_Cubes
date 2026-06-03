@@ -1,19 +1,30 @@
-// ======================
-// ORDER FORM
-// ======================
+import { db } from "./firebase.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+import {
+    collection,
+    addDoc,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-    const form =
-    document.getElementById("orderForm");
 
-    if(form){
+// =======================
+// CUBE ORDERS
+// =======================
 
-        form.addEventListener("submit", (e) => {
+const orderForm =
+document.getElementById("orderForm");
 
-            e.preventDefault();
+if(orderForm){
 
-            const order = {
+    orderForm.addEventListener("submit", async (e)=>{
+
+        e.preventDefault();
+
+        await addDoc(
+            collection(db,"orders"),
+            {
+
+                type:"cube",
 
                 name:
                 document.getElementById("name").value,
@@ -31,133 +42,177 @@ document.addEventListener("DOMContentLoaded", () => {
                     document.getElementById("quantity").value
                 )
 
-            };
+            }
+        );
 
-            let orders =
-            JSON.parse(
-                localStorage.getItem("orders")
-            ) || [];
+        alert("Order submitted!");
 
-            orders.push(order);
+        orderForm.reset();
 
-            localStorage.setItem(
-                "orders",
-                JSON.stringify(orders)
-            );
+    });
 
-            alert("Order placed successfully!");
+}
 
-            form.reset();
 
-        });
+// =======================
+// SPECIAL REQUESTS
+// =======================
 
-    }
+const specialForm =
+document.getElementById("specialForm");
 
-});
+if(specialForm){
 
-// ======================
-// LOGIN
-// ======================
+    specialForm.addEventListener("submit", async (e)=>{
 
-function checkPassword(){
+        e.preventDefault();
+
+        const halfHours =
+        Number(
+            document.getElementById("printTime").value
+        );
+
+        await addDoc(
+            collection(db,"orders"),
+            {
+
+                type:"special",
+
+                name:
+                document.getElementById("specialName").value,
+
+                description:
+                document.getElementById("requestText").value,
+
+                printTime:
+                halfHours,
+
+                price:
+                halfHours * 0.5
+
+            }
+        );
+
+        alert("Special request submitted!");
+
+        specialForm.reset();
+
+    });
+
+}
+
+
+// =======================
+// PASSWORD
+// =======================
+
+window.checkPassword = async function(){
 
     const pass =
     document.getElementById("password").value;
 
-    if(pass === "cubeadmin"){
-
-        document.getElementById(
-            "loginBox"
-        ).style.display = "none";
-
-        document.getElementById(
-            "ordersArea"
-        ).style.display = "block";
-
-        showOrders();
-
-    }
-
-    else{
+    if(pass !== "cubeadmin"){
 
         alert("Incorrect password");
-
-    }
-
-}
-
-// ======================
-// SHOW ORDERS
-// ======================
-
-function showOrders(){
-
-    const box =
-    document.getElementById("ordersList");
-
-    let orders =
-    JSON.parse(
-        localStorage.getItem("orders")
-    ) || [];
-
-    box.innerHTML = "";
-
-    if(orders.length === 0){
-
-        box.innerHTML = `
-            <div class="order-card">
-                <h2>No Orders Yet</h2>
-            </div>
-        `;
 
         return;
 
     }
 
-    let totalRevenue = 0;
+    document.getElementById(
+        "loginBox"
+    ).style.display = "none";
 
-    orders.forEach(order => {
+    document.getElementById(
+        "ordersArea"
+    ).style.display = "block";
 
-        const price = Number(order.price);
+    loadOrders();
 
-        totalRevenue += price;
+};
 
-        box.innerHTML += `
 
-        <div class="order-card">
+// =======================
+// LOAD ORDERS
+// =======================
 
-            <div class="order-header">
+async function loadOrders(){
 
-                <h2>${order.name}</h2>
+    const container =
+    document.getElementById("ordersList");
 
-                <span class="status">
-                    New Order
-                </span>
+    const snapshot =
+    await getDocs(
+        collection(db,"orders")
+    );
+
+    let html = "";
+
+    let revenue = 0;
+
+    snapshot.forEach(doc=>{
+
+        const order = doc.data();
+
+        revenue +=
+        Number(order.price || 0);
+
+        if(order.type === "cube"){
+
+            html += `
+
+            <div class="order-card">
+
+                <h2>📦 Cube Order</h2>
+
+                <p><b>Name:</b>
+                ${order.name}</p>
+
+                <p><b>Colour:</b>
+                ${order.colour}</p>
+
+                <p><b>Quantity:</b>
+                ${order.quantity}</p>
+
+                <p><b>Price:</b>
+                £${order.price.toFixed(2)}</p>
 
             </div>
 
-            <p>
-                🎨 Colour:
-                ${order.colour}
-            </p>
+            `;
 
-            <p>
-                📦 Quantity:
-                ${order.quantity}
-            </p>
+        }
 
-            <p>
-                💷 Price:
-                £${price.toFixed(2)}
-            </p>
+        else{
 
-        </div>
+            html += `
 
-        `;
+            <div class="order-card">
+
+                <h2>🛠 Special Request</h2>
+
+                <p><b>Name:</b>
+                ${order.name}</p>
+
+                <p><b>Request:</b>
+                ${order.description}</p>
+
+                <p><b>Print Time:</b>
+                ${order.printTime}
+                half-hours</p>
+
+                <p><b>Price:</b>
+                £${order.price.toFixed(2)}</p>
+
+            </div>
+
+            `;
+
+        }
 
     });
 
-    box.innerHTML += `
+    html += `
 
     <div class="cart-total">
 
@@ -165,36 +220,12 @@ function showOrders(){
 
         <br><br>
 
-        £${totalRevenue.toFixed(2)}
-
-        <br><br>
-
-        <button onclick="clearOrders()">
-            Clear Orders
-        </button>
+        £${revenue.toFixed(2)}
 
     </div>
 
     `;
 
-}
-
-// ======================
-// CLEAR ORDERS
-// ======================
-
-function clearOrders(){
-
-    if(confirm(
-        "Delete all orders?"
-    )){
-
-        localStorage.removeItem(
-            "orders"
-        );
-
-        showOrders();
-
-    }
+    container.innerHTML = html;
 
 }
