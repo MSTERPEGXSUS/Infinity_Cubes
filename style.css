@@ -72,6 +72,22 @@ nav{
     opacity:0.95;
 }
 
+.hero-button {
+  padding: 16px 32px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #ff3b3b, #ff006e);
+  color: white;
+  box-shadow: 0 10px 20px rgba(255, 0, 100, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.hero-button:hover {
+  transform: scale(1.05);
+}
 /* BUTTONS */
 
 .hero-buttons{
@@ -230,6 +246,83 @@ button:hover{
     font-size:26px;
     font-weight:700;
 }
+
+
+
+/* ===== Special Requests Page (hector.html) ===== */
+
+.special-container {
+  max-width: 700px;
+  margin: 80px auto;
+  padding: 30px;
+  background: #0f172a;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+.special-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.special-input,
+.special-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: white;
+  font-size: 16px;
+  outline: none;
+}
+
+.special-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.special-input:focus,
+.special-textarea:focus {
+  border-color: #ff006e;
+  box-shadow: 0 0 10px rgba(255, 0, 110, 0.3);
+}
+
+.special-button {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #ff3b3b, #ff006e);
+  color: white;
+  transition: transform 0.2s ease;
+}
+
+.special-button:hover {
+  transform: scale(1.03);
+}
+
+.special-card {
+  margin-top: 20px;
+  padding: 15px;
+  background: #1e293b;
+  border-radius: 12px;
+  border-left: 4px solid #ff006e;
+}
+
+
+
+
+
 
 /* MOBILE */
 
