@@ -181,15 +181,16 @@ window.deleteOrder = deleteOrder;
 
 // ---------------- EDIT ORDER ----------------
 
-async function editOrder(id, currentOrder) {
-    const newName = prompt("Customer name:", currentOrder.name);
-    if (!newName) return;
+async function editOrder(id, order) {
 
-    const newColour = prompt("Colour:", currentOrder.colour);
-    if (!newColour) return;
+    const newName = prompt("Customer name:", order.name || "");
+    if (newName === null) return;
 
-    const newQuantity = prompt("Quantity:", currentOrder.quantity);
-    if (!newQuantity) return;
+    const newColour = prompt("Colour:", order.colour || "");
+    if (newColour === null) return;
+
+    const newQuantity = prompt("Quantity:", order.quantity || "");
+    if (newQuantity === null) return;
 
     try {
         await updateDoc(doc(db, "orders", id), {
@@ -199,6 +200,7 @@ async function editOrder(id, currentOrder) {
         });
 
         loadOrders();
+
     } catch (err) {
         console.error(err);
         alert("Edit failed: " + err.message);
