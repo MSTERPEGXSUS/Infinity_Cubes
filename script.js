@@ -1,13 +1,11 @@
-import { db } from "./firebase.js";
-
 import {
     collection,
     addDoc,
     getDocs,
     deleteDoc,
-    doc
+    doc,
+    updateDoc
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
 const orderForm = document.getElementById("orderForm");
 
 if(orderForm){
