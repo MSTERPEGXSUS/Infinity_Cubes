@@ -7,56 +7,24 @@ import {
     updateDoc
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+// IMPORTANT: db must exist from your firebase init file
+// const db = getFirestore(app);
+
 const orderForm = document.getElementById("orderForm");
 const specialForm = document.getElementById("specialForm");
-const ordersContainer = document.getElementById("ordersList");
+const ordersList = document.getElementById("ordersList");
 
-// -------------------- ORDER FORM --------------------
-
-if (orderForm) {
-    orderForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        await addDoc(collection(db, "orders"), {
-            type: "cube",
-            name: document.getElementById("name").value,
-            colour: document.getElementById("colour").value,
-            quantity: Number(document.getElementById("quantity").value),
-            price: Number(document.getElementById("quantity").value)
-        });
-
-        alert("Order submitted!");
-        orderForm.reset();
-    });
-}
-
-// -------------------- SPECIAL FORM --------------------
-
-if (specialForm) {
-    specialForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const halfHours = Number(document.getElementById("printTime").value);
-
-        await addDoc(collection(db, "orders"), {
-            type: "special",
-            name: document.getElementById("specialName").value,
-            description: document.getElementById("requestText").value,
-            printTime: halfHours,
-            price: halfHours * 0.5
-        });
-
-        alert("Special request submitted!");
-        specialForm.reset();
-    });
-}
-
-// -------------------- LOGIN --------------------
+// ---------------- LOGIN ----------------
 
 async function checkPassword() {
-    const input = document.getElementById("password");
+    const passwordInput = document.getElementById("password");
 
-    if (!input || input.value !== "cubeadmin") {
+    if (!passwordInput) {
+        alert("Password box not found");
+        return;
+    }
+
+    if (passwordInput.value !== "cubeadmin") {
         alert("Incorrect password");
         return;
     }
@@ -69,106 +37,180 @@ async function checkPassword() {
 
 window.checkPassword = checkPassword;
 
-// -------------------- LOAD ORDERS --------------------
+// ---------------- CREATE CUBE ORDER ----------------
 
-async function loadOrders() {
-    if (!ordersContainer) return;
+if (orderForm) {
+    orderForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    const snapshot = await getDocs(collection(db, "orders"));
+        try {
+            await addDoc(collection(db, "orders"), {
+                type: "cube",
+                name: document.getElementById("name").value,
+                colour: document.getElementById("colour").value,
+                quantity: Number(document.getElementById("quantity").value),
+                price: Number(document.getElementById("quantity").value)
+            });
 
-    let revenue = 0;
-
-    let html = `
-        <button class="hero-button" onclick="resetAllOrders()">
-            RESET ALL ORDERS
-        </button>
-        <br><br>
-    `;
-
-    snapshot.forEach((orderDoc) => {
-        const order = orderDoc.data();
-        revenue += Number(order.price || 0);
-
-        if (order.type === "cube") {
-            html += `
-                <div class="order-card">
-                    <h2>📦 Cube Order</h2>
-
-                    <p><b>Name:</b> ${order.name}</p>
-                    <p><b>Colour:</b> ${order.colour}</p>
-                    <p><b>Quantity:</b> ${order.quantity}</p>
-
-                    <p class="price">£${Number(order.price).toFixed(2)}</p>
-
-                    <button onclick="editOrder('${orderDoc.id}')">Edit</button>
-                    <button onclick="deleteOrder('${orderDoc.id}')">Delete</button>
-                </div>
-            `;
-        } else {
-            html += `
-                <div class="order-card">
-                    <h2>🛠 Special Request</h2>
-
-                    <p><b>Name:</b> ${order.name}</p>
-                    <p><b>Request:</b> ${order.description}</p>
-                    <p><b>Print Time:</b> ${order.printTime} half-hours</p>
-
-                    <p class="price">£${Number(order.price).toFixed(2)}</p>
-                </div>
-            `;
+            alert("Order submitted!");
+            orderForm.reset();
+        } catch (err) {
+            console.error(err);
+            alert("Failed to submit order: " + err.message);
         }
     });
-
-    html += `
-        <div class="cart-total">
-            Total Revenue<br><br>
-            £${revenue.toFixed(2)}
-        </div>
-    `;
-
-    ordersContainer.innerHTML = html;
 }
 
-// -------------------- RESET --------------------
+// ---------------- SPECIAL ORDER ----------------
 
-async function resetAllOrders() {
-    const confirmed = confirm("Delete ALL orders?");
-    if (!confirmed) return;
+if (specialForm) {
+    specialForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    const snapshot = await getDocs(collection(db, "orders"));
+        try {
+            const halfHours = Number(document.getElementById("printTime").value);
 
-    for (const orderDoc of snapshot.docs) {
-        await deleteDoc(doc(db, "orders", orderDoc.id));
+            await addDoc(collection(db, "orders"), {
+                type: "special",
+                name: document.getElementById("specialName").value,
+                description: document.getElementById("requestText").value,
+                printTime: halfHours,
+                price: halfHours * 0.5
+            });
+
+            alert("Special request submitted!");
+            specialForm.reset();
+        } catch (err) {
+            console.error(err);
+            alert("Failed to submit special order: " + err.message);
+        }
+    });
+}
+
+// ---------------- LOAD ORDERS ----------------
+
+async function loadOrders() {
+    if (!ordersList) return;
+
+    try {
+        const snapshot = await getDocs(collection(db, "orders"));
+
+        let revenue = 0;
+
+        let html = `
+            <button class="hero-button" onclick="resetAllOrders()">
+                RESET ALL ORDERS
+            </button>
+            <br><br>
+        `;
+
+        snapshot.forEach((orderDoc) => {
+            const order = orderDoc.data();
+            revenue += Number(order.price || 0);
+
+            if (order.type === "cube") {
+                html += `
+                    <div class="order-card">
+                        <h2>📦 Cube Order</h2>
+
+                        <p><b>Name:</b> ${order.name}</p>
+                        <p><b>Colour:</b> ${order.colour}</p>
+                        <p><b>Quantity:</b> ${order.quantity}</p>
+
+                        <p class="price">£${Number(order.price).toFixed(2)}</p>
+
+                        <button onclick="editOrder('${orderDoc.id}', '${order.name}')">Edit</button>
+                        <button onclick="deleteOrder('${orderDoc.id}')">Delete</button>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="order-card">
+                        <h2>🛠 Special Request</h2>
+
+                        <p><b>Name:</b> ${order.name}</p>
+                        <p><b>Request:</b> ${order.description}</p>
+                        <p><b>Print Time:</b> ${order.printTime} half-hours</p>
+
+                        <p class="price">£${Number(order.price).toFixed(2)}</p>
+
+                        <button onclick="editOrder('${orderDoc.id}', '${order.name}')">Edit</button>
+                        <button onclick="deleteOrder('${orderDoc.id}')">Delete</button>
+                    </div>
+                `;
+            }
+        });
+
+        html += `
+            <div class="cart-total">
+                Total Revenue<br><br>
+                £${revenue.toFixed(2)}
+            </div>
+        `;
+
+        ordersList.innerHTML = html;
+
+    } catch (err) {
+        console.error(err);
+        alert("Failed to load orders: " + err.message);
     }
-
-    loadOrders();
 }
 
-window.resetAllOrders = resetAllOrders;
-
-// -------------------- DELETE --------------------
+// ---------------- DELETE SINGLE ORDER ----------------
 
 async function deleteOrder(id) {
-    const confirmed = confirm("Delete this order?");
-    if (!confirmed) return;
+    const confirmDelete = confirm("Delete this order?");
+    if (!confirmDelete) return;
 
-    await deleteDoc(doc(db, "orders", id));
-    loadOrders();
+    try {
+        await deleteDoc(doc(db, "orders", id));
+        loadOrders();
+    } catch (err) {
+        console.error(err);
+        alert("Delete failed: " + err.message);
+    }
 }
 
 window.deleteOrder = deleteOrder;
 
-// -------------------- EDIT --------------------
+// ---------------- EDIT ORDER ----------------
 
-async function editOrder(id) {
-    const newName = prompt("Customer name:");
+async function editOrder(id, currentName) {
+    const newName = prompt("Edit customer name:", currentName);
     if (!newName) return;
 
-    await updateDoc(doc(db, "orders", id), {
-        name: newName
-    });
+    try {
+        await updateDoc(doc(db, "orders", id), {
+            name: newName
+        });
 
-    loadOrders();
+        loadOrders();
+    } catch (err) {
+        console.error(err);
+        alert("Edit failed: " + err.message);
+    }
 }
 
 window.editOrder = editOrder;
+
+// ---------------- RESET ALL ORDERS ----------------
+
+async function resetAllOrders() {
+    const confirmReset = confirm("Delete ALL orders?");
+    if (!confirmReset) return;
+
+    try {
+        const snapshot = await getDocs(collection(db, "orders"));
+
+        for (const orderDoc of snapshot.docs) {
+            await deleteDoc(doc(db, "orders", orderDoc.id));
+        }
+
+        loadOrders();
+    } catch (err) {
+        console.error(err);
+        alert("Reset failed: " + err.message);
+    }
+}
+
+window.resetAllOrders = resetAllOrders;
