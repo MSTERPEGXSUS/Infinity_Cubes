@@ -1,33 +1,60 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+```
+<title>Hector's Special Requests</title>
+
+<link rel="stylesheet" href="style.css">
+```
+
+</head>
+<body>
+
+<div class="special-container">
+
+```
+<h1 class="special-title">
+    Hector's Special Requests
+</h1>
+
 <form id="specialForm">
 
     <input
+    class="special-input"
     type="text"
     id="specialName"
     placeholder="Your Name"
     required>
 
-    <br><br>
-
     <textarea
+    class="special-textarea"
     id="requestText"
-    placeholder="Describe what you want printed"
+    placeholder="Describe what you would like 3D printed"
     required></textarea>
 
-    <br><br>
-
     <input
+    class="special-input"
     type="number"
     id="printTime"
     placeholder="Estimated half-hours of printing"
     required>
 
-    <br><br>
+    <button
+    class="special-button"
+    type="submit">
 
-    <button type="submit">
         Submit Request
+
     </button>
 
 </form>
+```
+
+</div>
 
 <script type="module" src="script.js"></script>
 
+</body>
+</html>
