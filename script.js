@@ -3,16 +3,12 @@ import { db } from "./firebase.js";
 import {
     collection,
     addDoc,
-    getDocs
+    getDocs,
+    deleteDoc,
+    doc
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-
-// =======================
-// CUBE ORDERS
-// =======================
-
-const orderForm =
-document.getElementById("orderForm");
+const orderForm = document.getElementById("orderForm");
 
 if(orderForm){
 
@@ -23,43 +19,22 @@ if(orderForm){
         await addDoc(
             collection(db,"orders"),
             {
-
                 type:"cube",
-
-                name:
-                document.getElementById("name").value,
-
-                colour:
-                document.getElementById("colour").value,
-
-                quantity:
-                Number(
-                    document.getElementById("quantity").value
-                ),
-
-                price:
-                Number(
-                    document.getElementById("quantity").value
-                )
-
+                name:document.getElementById("name").value,
+                colour:document.getElementById("colour").value,
+                quantity:Number(document.getElementById("quantity").value),
+                price:Number(document.getElementById("quantity").value)
             }
         );
 
         alert("Order submitted!");
-
         orderForm.reset();
 
     });
 
 }
 
-
-// =======================
-// SPECIAL REQUESTS
-// =======================
-
-const specialForm =
-document.getElementById("specialForm");
+const specialForm = document.getElementById("specialForm");
 
 if(specialForm){
 
@@ -75,66 +50,37 @@ if(specialForm){
         await addDoc(
             collection(db,"orders"),
             {
-
                 type:"special",
-
-                name:
-                document.getElementById("specialName").value,
-
-                description:
-                document.getElementById("requestText").value,
-
-                printTime:
-                halfHours,
-
-                price:
-                halfHours * 0.5
-
+                name:document.getElementById("specialName").value,
+                description:document.getElementById("requestText").value,
+                printTime:halfHours,
+                price:halfHours * 0.5
             }
         );
 
         alert("Special request submitted!");
-
         specialForm.reset();
 
     });
 
 }
 
-
-// =======================
-// PASSWORD
-// =======================
-
 window.checkPassword = async function(){
 
-    const pass =
-    document.getElementById("password").value;
-
-    if(pass !== "cubeadmin"){
-
+    if(
+        document.getElementById("password").value
+        !== "cubeadmin"
+    ){
         alert("Incorrect password");
-
         return;
-
     }
 
-    document.getElementById(
-        "loginBox"
-    ).style.display = "none";
-
-    document.getElementById(
-        "ordersArea"
-    ).style.display = "block";
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("ordersArea").style.display = "block";
 
     loadOrders();
 
 };
-
-
-// =======================
-// LOAD ORDERS
-// =======================
 
 async function loadOrders(){
 
@@ -146,13 +92,25 @@ async function loadOrders(){
         collection(db,"orders")
     );
 
-    let html = "";
-
     let revenue = 0;
+    let html = `
 
-    snapshot.forEach(doc=>{
+    <button
+    class="hero-button"
+    onclick="resetAllOrders()">
 
-        const order = doc.data();
+        RESET ALL ORDERS
+
+    </button>
+
+    <br><br>
+
+    `;
+
+    snapshot.forEach(orderDoc=>{
+
+        const order =
+        orderDoc.data();
 
         revenue +=
         Number(order.price || 0);
@@ -165,17 +123,15 @@ async function loadOrders(){
 
                 <h2>📦 Cube Order</h2>
 
-                <p><b>Name:</b>
-                ${order.name}</p>
+                <p><b>Name:</b> ${order.name}</p>
 
-                <p><b>Colour:</b>
-                ${order.colour}</p>
+                <p><b>Colour:</b> ${order.colour}</p>
 
-                <p><b>Quantity:</b>
-                ${order.quantity}</p>
+                <p><b>Quantity:</b> ${order.quantity}</p>
 
-                <p><b>Price:</b>
-                £${order.price.toFixed(2)}</p>
+                <p class="price">
+                    £${order.price.toFixed(2)}
+                </p>
 
             </div>
 
@@ -191,18 +147,17 @@ async function loadOrders(){
 
                 <h2>🛠 Special Request</h2>
 
-                <p><b>Name:</b>
-                ${order.name}</p>
+                <p><b>Name:</b> ${order.name}</p>
 
-                <p><b>Request:</b>
-                ${order.description}</p>
+                <p><b>Request:</b> ${order.description}</p>
 
                 <p><b>Print Time:</b>
                 ${order.printTime}
                 half-hours</p>
 
-                <p><b>Price:</b>
-                £${order.price.toFixed(2)}</p>
+                <p class="price">
+                    £${order.price.toFixed(2)}
+                </p>
 
             </div>
 
@@ -229,3 +184,36 @@ async function loadOrders(){
     container.innerHTML = html;
 
 }
+
+async function resetAllOrders(){
+
+    const confirmed =
+    confirm(
+        "Delete ALL orders?"
+    );
+
+    if(!confirmed) return;
+
+    const snapshot =
+    await getDocs(
+        collection(db,"orders")
+    );
+
+    for(const orderDoc of snapshot.docs){
+
+        await deleteDoc(
+            doc(
+                db,
+                "orders",
+                orderDoc.id
+            )
+        );
+
+    }
+
+    loadOrders();
+
+}
+
+window.resetAllOrders =
+resetAllOrders;
