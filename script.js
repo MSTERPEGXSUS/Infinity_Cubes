@@ -63,7 +63,7 @@ if(specialForm){
 
 }
 
-window.checkPassword = async function(){
+async function checkPassword(){
 
     if(
         document.getElementById("password").value
@@ -77,6 +77,10 @@ window.checkPassword = async function(){
     document.getElementById("ordersArea").style.display = "block";
 
     loadOrders();
+
+}
+
+window.checkPassword = checkPassword;
 
 };
 
