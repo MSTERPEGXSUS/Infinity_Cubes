@@ -1,53 +1,53 @@
 <!DOCTYPE html>
+
 <html>
 <head>
 
-    <title>Orders Panel</title>
+```
+<title>Orders Panel</title>
 
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
+```
 
 </head>
 <body>
 
 <div class="admin-container">
 
-    <div id="loginBox">
+```
+<div id="loginBox">
 
-        <h1>Orders Panel</h1>
+    <h1>Orders Panel</h1>
 
-        <br>
+    <input
+    type="password"
+    id="password"
+    placeholder="Enter Password">
 
-        <input
-        type="password"
-        id="password"
-        placeholder="Enter Password">
+    <br><br>
 
-        <br><br>
-
-        <button onclick="checkPassword()">
-            Access Orders
-        </button>
-
-    </div>
-
-    <div
-    id="ordersArea"
-    style="display:none;">
-
-        <h1>Customer Orders</h1>
-
-        <br>
-
-        <div id="ordersList"></div>
-
-    </div>
+    <button onclick="checkPassword()">
+        Access Orders
+    </button>
 
 </div>
 
-<button class="hero-button" onclick="resetAllOrders()">
-  RESET ALL ORDERS
-</button>
+<div
+id="ordersArea"
+style="display:none;">
+
+    <h1>Customer Orders</h1>
+
+    <br>
+
+    <div id="ordersList"></div>
+
+</div>
+```
+
+</div>
 
 <script type="module" src="script.js"></script>
+
 </body>
 </html>
