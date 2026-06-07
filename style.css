@@ -313,3 +313,30 @@ button:hover{
 .special-button:hover{
     transform:translateY(-3px);
 }
+
+.order-card button{
+
+    padding:10px 18px;
+
+    margin:5px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.order-card button:first-of-type{
+
+    background:#4caf50;
+    color:white;
+}
+
+.order-card button:last-of-type{
+
+    background:#ff4d4d;
+    color:white;
+}
