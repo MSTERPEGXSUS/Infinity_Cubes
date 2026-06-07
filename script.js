@@ -136,7 +136,11 @@ async function loadOrders() {
 
                         <p class="price">£${Number(order.price).toFixed(2)}</p>
 
-                        <button onclick="editOrder('${orderDoc.id}', '${order.name}')">Edit</button>
+                        editOrder('${orderDoc.id}', {
+    name: '${order.name}',
+    colour: '${order.colour}',
+    quantity: '${order.quantity}'
+})
                         <button onclick="deleteOrder('${orderDoc.id}')">Delete</button>
                     </div>
                 `;
@@ -177,13 +181,21 @@ window.deleteOrder = deleteOrder;
 
 // ---------------- EDIT ORDER ----------------
 
-async function editOrder(id, currentName) {
-    const newName = prompt("Edit customer name:", currentName);
+async function editOrder(id, currentOrder) {
+    const newName = prompt("Customer name:", currentOrder.name);
     if (!newName) return;
+
+    const newColour = prompt("Colour:", currentOrder.colour);
+    if (!newColour) return;
+
+    const newQuantity = prompt("Quantity:", currentOrder.quantity);
+    if (!newQuantity) return;
 
     try {
         await updateDoc(doc(db, "orders", id), {
-            name: newName
+            name: newName,
+            colour: newColour,
+            quantity: Number(newQuantity)
         });
 
         loadOrders();
