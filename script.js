@@ -114,26 +114,36 @@ async function loadOrders(){
         Number(order.price || 0);
 
         if(order.type === "cube"){
+html += `
 
-            html += `
+<div class="order-card">
 
-            <div class="order-card">
+```
+<h2>📦 Cube Order</h2>
 
-                <h2>📦 Cube Order</h2>
+<p><b>Name:</b> ${order.name}</p>
 
-                <p><b>Name:</b> ${order.name}</p>
+<p><b>Colour:</b> ${order.colour}</p>
 
-                <p><b>Colour:</b> ${order.colour}</p>
+<p><b>Quantity:</b> ${order.quantity}</p>
 
-                <p><b>Quantity:</b> ${order.quantity}</p>
+<p class="price">
+    £${order.price.toFixed(2)}
+</p>
 
-                <p class="price">
-                    £${order.price.toFixed(2)}
-                </p>
+<button onclick="editOrder('${orderDoc.id}')">
+    Edit
+</button>
 
-            </div>
+<button onclick="deleteOrder('${orderDoc.id}')">
+    Delete
+</button>
+```
 
-            `;
+</div>
+
+`;
+
 
         }
 
@@ -215,3 +225,46 @@ async function resetAllOrders(){
 
 window.resetAllOrders =
 resetAllOrders;
+
+async function deleteOrder(id){
+
+```
+const confirmed =
+confirm("Delete this order?");
+
+if(!confirmed) return;
+
+await deleteDoc(
+    doc(db,"orders",id)
+);
+
+loadOrders();
+```
+
+}
+
+window.deleteOrder =
+deleteOrder;
+
+async function editOrder(id){
+
+```
+const newName =
+prompt("Customer name:");
+
+if(!newName) return;
+
+await updateDoc(
+    doc(db,"orders",id),
+    {
+        name:newName
+    }
+);
+
+loadOrders();
+```
+
+}
+
+window.editOrder =
+editOrder;
