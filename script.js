@@ -146,7 +146,8 @@ html += `
 
 
         }
-
+window.deleteOrder = deleteOrder;
+window.editOrder = editOrder;
         else{
 
             html += `
